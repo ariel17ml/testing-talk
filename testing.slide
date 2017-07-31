@@ -1,0 +1,200 @@
+Testing en Golang
+Metodologías y recomendaciones
+
+Buenos Aires
+Agosto 2017
+
+Ariel Gerardo Ríos
+
+* Metodologías
+
+- Tradicional
+- Subtests
+- Table driven test
+- Test fixtures
+- Golden files
+- Test flags
+- Test helpers
+
+* Tradicional
+
+    // In package_test.go
+
+    func TestUnitForUseCase1(t *testing.T) {
+        // set up
+        // -- testing
+        // tear down
+    }
+
+    func TestUnitForUseCase2(t *testing.T) {
+        // set up
+        // -- testing
+        // tear down
+    }
+
+Then running them:
+    
+    $ go test
+
+* Subtests
+
+Agrupamiento de test unitarios dentro de otro test, idealmente relacionados.
+
+    // In package_test.go
+
+    func TestUnit(t *testing.T) {
+        // set up
+
+        t.Run("UseCase1", func (t *testing.T) {
+            // -- testing
+        })
+
+        t.Run("UseCase2", func (t *testing.T) {
+            // -- testing
+        })
+
+        // tear down
+    }
+
+Then running them:
+
+    $ go test
+    $ go test -run TestUnit/UseCase2  # single case!
+
+: Beneficios:
+: - Reutilización de objetos con inicialiación costosa.
+: - Agrupamiento de test unitarios por objetivo o funcionalidad testeada ( a.k.a. test suite).
+
+* Table driven test
+
+Casos de uso nombrados, con valores de entrada y salida esperados.
+
+    table = {
+        CU-1: (input-1, ..., input-n, output)
+        ...
+        CU-m: (input-1, ..., input-n, output)
+    }
+
+Ejemplo:
+
+    func TestFormatter(t *testing.T) {
+    	var table = map[string]struct{ A, B, Expected string }{
+    		"only-strings": {"a", "b", "a-xx-b"},
+    		"with-numbers": {"01", "02", "01-xx-02"},
+    	}
+    
+    	for _, tc := range table {
+    		s := somelib.Method(tc.A, tc.B)
+    		if s != tc.Expected {
+    			t.Errorf("Method(%q, %q) => %q, want %q", tc.A, tc.B, s, tc.Expected)
+    		}
+    	}
+    }
+
+: Descripción:
+: Un array formado por uno o más valores de entrada, acompañados por el valor de salida esperado.
+: Beneficios:
+: - Facilidad para agregar más casos de uso a la lista.
+: - Conveniente para reutilizar objetos que son de creación costosa.
+: Recomendaciones:
+: - Usar nombres en los casos de uso para fácil localización.
+: - Implementarlo aún en aquellos tests formados por casos de uso únicos, pero que tengan posibilidad de crecer en el futuro.
+
+* Test fixtures
+
+Extraer datos de inicialización del test para reducir polución.
+
+    // In ./some_test.go
+    func TestOperation(t *testing.T) {
+        data := filepath.Join("testdata", "fixture.json")
+
+        // -- then do some verification using the data
+    }
+
+    // In ./testdata/fixture.json
+    {
+        "config_1": 25,
+        "config_2": "on",
+        "objects": [
+            {"id": 1, "name": "Api"},
+            {"id": 2, "name": "Core"}
+        ]
+    }
+
+: A tener en cuenta:
+: - Los directorios llamados "testdata" serán ignorados por el compilador; son útiles para esta responsabilidad.
+: Beneficios: 
+: - Útil para configuraciones, datos de modelos, datos binarios, etc.
+: Recomendaciones:
+: - Usar paths relativos desde los tests.
+
+* Golden files
+
+Valida la diferencia de bytes entre el resultado obtenido y el esperado (diff).
+
+    // From stdlib, gofmt_test.go#153
+    func TestCRLF(t *testing.T) {
+    	const input = "testdata/crlf.input"   // must contain CR/LF's
+    	const golden = "testdata/crlf.golden" // must not contain any CR's
+    
+    	data, err := ioutil.ReadFile(input)
+    	if err != nil {
+    		t.Error(err)
+    	}
+    	if !bytes.Contains(data, []byte("\r\n")) {
+    		t.Errorf("%s contains no CR/LF's", input)
+    	}
+    
+    	data, err = ioutil.ReadFile(golden)
+    	if err != nil {
+    		t.Error(err)
+    	}
+    	if bytes.Contains(data, []byte("\r")) {
+    		t.Errorf("%s contains CR's", golden)
+    	}
+    }
+
+: Beneficios:
+: - Útil para usarla cuando el resultado del método es una estructura muy grande para o incómoda de revisarla manualmente.
+: - Extrae todo el contenido del resultado esperado fuera del test, como en fixtures.
+
+* Test flags
+
+    // In flags_test.go
+    // Making use of currently available -test.short flag
+
+    func TestVerySlowMethod(t *testing.T) {
+    	if testing.Short() {
+    		t.Skip("this test must be skipped in short mode.")
+    	}
+
+        // -- test the slow method
+    }
+
+Then running it:
+
+    $ go test flags_test.go -test.short -test.v
+    === RUN   TestVerySlowMethod
+    --- SKIP: TestVerySlowMethod (0.00s)
+    	flags_test.go:17: this test must be skipped in short mode.
+    PASS
+    ok  	command-line-arguments	0.008s
+
+* Global state
+
+TODO
+
+* Test helpers
+
+TODO
+
+* Recomendaciones
+
+- On packages/functions
+- Mocking: is really needed?
+- Configurability
+- Subprocessing
+- Interfaces
+- Testing as a public API
+- Parallelization
+
