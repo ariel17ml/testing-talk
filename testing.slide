@@ -5,7 +5,9 @@ Agosto 2017
 
 Ariel Gerardo Ríos
 
-* Metodologías
+* Contenido
+
+Metodologías:
 
 1. Tradicional
 2. Subtests
@@ -14,6 +16,11 @@ Ariel Gerardo Ríos
 5. Golden files
 6. Test flags
 7. Test helpers
+
+Recomendaciones:
+
+
+* Metodologías
 
 * 1. Tradicional
 
@@ -163,7 +170,7 @@ Valida la diferencia entre el resultado obtenido y una copia del esperado.
         // -- test the slow method
     }
 
-Then running it:
+Ejemplo:
 
     $ go test flags_test.go -test.short -test.v
     === RUN   TestVerySlowMethod
@@ -172,26 +179,67 @@ Then running it:
     PASS
     ok  	command-line-arguments	0.008s
 
+: Beneficios:
+: - Se puede agrupar tests por algún patrón no explícito.
+
 * 7. Test helpers
 
-TODO example
+Reducir el ruido en el propósito del test debido a control de erroresy otros chequeos.
+
+    func testURL(t *testing.T, url string) {
+    	resp, err := http.Get(url)
+        checkError(t, err)
+    }
+
+    func testFile(t *testing.T) func(t *testing.T) {
+        err := ioutil.WriteFile(filePath, []byte("Stupid sexy flanders"), 0644)
+        checkError(t, err)
+        
+        return func(t *testing.T) {  // this is tear down
+        	err := os.Remove(filePath)
+        	checkError(t, err)
+        }
+    }
+
+    func TestWithExplicitPurpose(t *testing.T) {
+        testURL(t, "http://www.mercadolibre.com.ar")
+        defer testFile(t)(t)
+    }
 
 : Beneficios:
-: - Never return errors; fail the test directly.
-: - Easier since error checking is gone.
-: - More clear on what they are testing, instead of boilerplate.
-: - Return a function if cleaning is needed.
+: - Expresa de forma más corta la intención dentro del test sin los controles de error.
+: Consideraciones:
+: - No se debe return errores; es mejor fallar directamente en la función misma.
+: - Es conveniente retornar una función para limpieza si es necesario, para usarla con defer.
 : A tener en cuenta:
 : - Es elegante, pero puede no resultar obvio lo que se está haciendo.
 : - La función de limpieza también debe poder fallar.
 
 * Recomendaciones
 
-- On packages/functions
-- Mocking: is really needed?
-- Configurability
-- Subprocessing
-- Interfaces
-- Testing as a public API
-- Parallelization
+* Limitarse a la API pùblica
 
+- Testar sólo la API pública, a menos que la implementación sea tan compleja que amerite más.
+- Los tests blackbox nos ayudan a no testear lo que no es necesario, pero debemos ser cuidadosos.
+
+* Mocks: ¿son realmente necesarios?
+
+- Algunas interfaces no valen la pena ser imitadas, sino implementadas de forma más sencilla.
+- El paquete `net.Conn` es fácil 
+
+* Configurabilidad
+
+- A.k.a. estado global.
+- Aún frente aquellos valores que no cambiarán jamás, es mejor exportarlos como configuraciones con valores default.
+- De no ser posible, administrarlos internamente para que puedan ser sobrescritos por los test (como en `var`s).
+
+* Subprocessing
+
+- Lo ideal es ejecutar el binario y no simularlo.
+- Si el binario no está disponible no tiene sentido correr el test.
+- Tener en cuenta que `exec.Cmd` es un struct y puede ser reemplazado ;)
+
+* Paralelización
+
+- No es recomendado a menos que se esté completamente seguros de que un test no puede interferir en los resultados de otro.
+- Preparar los test para que sean paralelizables es costoso si no se tiene en cuenta desde el principio.
