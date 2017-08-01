@@ -128,27 +128,21 @@ Extraer datos de inicialización del test para reducir polución.
 
 * 5. Golden files
 
-Valida la diferencia de bytes entre el resultado obtenido y el esperado (diff).
+Valida la diferencia entre el resultado obtenido y una copia del esperado.
 
-    // From stdlib, gofmt_test.go#153
-    func TestCRLF(t *testing.T) {
-    	const input = "testdata/crlf.input"   // must contain CR/LF's
-    	const golden = "testdata/crlf.golden" // must not contain any CR's
+    func TestGolden(t *testing.T) {
+    	req, _ := http.NewRequest("GET", "/", nil)
+    	w := httptest.NewRecorder()
     
-    	data, err := ioutil.ReadFile(input)
-    	if err != nil {
-    		t.Error(err)
-    	}
-    	if !bytes.Contains(data, []byte("\r\n")) {
-    		t.Errorf("%s contains no CR/LF's", input)
-    	}
+    	handler := http.HandlerFunc(SomeHandler)
+    	handler.ServeHTTP(w, req)
     
-    	data, err = ioutil.ReadFile(golden)
-    	if err != nil {
-    		t.Error(err)
-    	}
-    	if bytes.Contains(data, []byte("\r")) {
-    		t.Errorf("%s contains CR's", golden)
+    	path := filepath.Join("testdata", "output.golden")
+    	dat, _ := ioutil.ReadFile(path)  // no err for simplicity
+    
+    	body := w.Body.String()  // a very big body
+    	if !strings.Contains(string(dat), body) {
+    		t.Errorf("Golden file content is not in body! %v", body)
     	}
     }
 
