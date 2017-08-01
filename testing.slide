@@ -174,7 +174,16 @@ Then running it:
 
 * 7. Test helpers
 
-TODO
+TODO example
+
+: Beneficios:
+: - Never return errors; fail the test directly.
+: - Easier since error checking is gone.
+: - More clear on what they are testing, instead of boilerplate.
+: - Return a function if cleaning is needed.
+: A tener en cuenta:
+: - Es elegante, pero puede no resultar obvio lo que se está haciendo.
+: - La función de limpieza también debe poder fallar.
 
 * Recomendaciones
 
