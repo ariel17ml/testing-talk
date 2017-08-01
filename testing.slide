@@ -18,7 +18,11 @@ Metodologías:
 7. Test helpers
 
 Recomendaciones:
-
+a. Limitarse a la API pùblica
+b. Mocks: ¿son realmente necesarios?
+c. Configurabilidad
+d. Subprocessing
+e. Paralelización
 
 * Metodologías
 
@@ -217,29 +221,29 @@ Reducir el ruido en el propósito del test debido a control de erroresy otros ch
 
 * Recomendaciones
 
-* Limitarse a la API pùblica
+* a. Limitarse a la API pùblica
 
 - Testar sólo la API pública, a menos que la implementación sea tan compleja que amerite más.
 - Los tests blackbox nos ayudan a no testear lo que no es necesario, pero debemos ser cuidadosos.
 
-* Mocks: ¿son realmente necesarios?
+* b. Mocks: ¿son realmente necesarios?
 
 - Algunas interfaces no valen la pena ser imitadas, sino implementadas de forma más sencilla.
 - El paquete `net.Conn` es fácil 
 
-* Configurabilidad
+* c. Configurabilidad
 
 - A.k.a. estado global.
 - Aún frente aquellos valores que no cambiarán jamás, es mejor exportarlos como configuraciones con valores default.
 - De no ser posible, administrarlos internamente para que puedan ser sobrescritos por los test (como en `var`s).
 
-* Subprocessing
+* d. Subprocessing
 
 - Lo ideal es ejecutar el binario y no simularlo.
 - Si el binario no está disponible no tiene sentido correr el test.
 - Tener en cuenta que `exec.Cmd` es un struct y puede ser reemplazado ;)
 
-* Paralelización
+* e. Paralelización
 
 - No es recomendado a menos que se esté completamente seguros de que un test no puede interferir en los resultados de otro.
 - Preparar los test para que sean paralelizables es costoso si no se tiene en cuenta desde el principio.
