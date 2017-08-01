@@ -1,42 +1,42 @@
 Testing en Golang
 Metodologías y recomendaciones
 
-Buenos Aires
 Agosto 2017
 
 Ariel Gerardo Ríos
 
 * Metodologías
 
-- Tradicional
-- Subtests
-- Table driven test
-- Test fixtures
-- Golden files
-- Test flags
-- Test helpers
+1. Tradicional
+2. Subtests
+3. Table driven test
+4. Test fixtures
+5. Golden files
+6. Test flags
+7. Test helpers
 
-* Tradicional
+* 1. Tradicional
 
     // In package_test.go
 
-    func TestUnitForUseCase1(t *testing.T) {
+    func TestUseCase1(t *testing.T) {
         // set up
         // -- testing
         // tear down
     }
 
-    func TestUnitForUseCase2(t *testing.T) {
+    func TestUseCase2(t *testing.T) {
         // set up
         // -- testing
         // tear down
     }
 
-Then running them:
+Ejecución:
     
     $ go test
+    $ go test -run TestUseCase1  # single test
 
-* Subtests
+* 2. Subtests
 
 Agrupamiento de test unitarios dentro de otro test, idealmente relacionados.
 
@@ -45,27 +45,24 @@ Agrupamiento de test unitarios dentro de otro test, idealmente relacionados.
     func TestUnit(t *testing.T) {
         // set up
 
-        t.Run("UseCase1", func (t *testing.T) {
-            // -- testing
-        })
-
-        t.Run("UseCase2", func (t *testing.T) {
-            // -- testing
-        })
+        t.Run("UseCase1", func (t *testing.T) { /* ... */ }
+        
+        t.Run("UseCase2", func (t *testing.T) { /* ... */ }
 
         // tear down
     }
 
-Then running them:
+Ejecución:
 
     $ go test
+    $ go test -run TestUnit  # single suite
     $ go test -run TestUnit/UseCase2  # single case!
 
 : Beneficios:
 : - Reutilización de objetos con inicialiación costosa.
 : - Agrupamiento de test unitarios por objetivo o funcionalidad testeada ( a.k.a. test suite).
 
-* Table driven test
+* 3. Table driven test
 
 Casos de uso nombrados, con valores de entrada y salida esperados.
 
@@ -100,13 +97,14 @@ Ejemplo:
 : - Usar nombres en los casos de uso para fácil localización.
 : - Implementarlo aún en aquellos tests formados por casos de uso únicos, pero que tengan posibilidad de crecer en el futuro.
 
-* Test fixtures
+* 4. Test fixtures
 
 Extraer datos de inicialización del test para reducir polución.
 
     // In ./some_test.go
     func TestOperation(t *testing.T) {
-        data := filepath.Join("testdata", "fixture.json")
+        path := filepath.Join("testdata", "fixture.json")
+        data, err := ioutil.ReadFile(path)
 
         // -- then do some verification using the data
     }
@@ -128,7 +126,7 @@ Extraer datos de inicialización del test para reducir polución.
 : Recomendaciones:
 : - Usar paths relativos desde los tests.
 
-* Golden files
+* 5. Golden files
 
 Valida la diferencia de bytes entre el resultado obtenido y el esperado (diff).
 
@@ -158,7 +156,7 @@ Valida la diferencia de bytes entre el resultado obtenido y el esperado (diff).
 : - Útil para usarla cuando el resultado del método es una estructura muy grande para o incómoda de revisarla manualmente.
 : - Extrae todo el contenido del resultado esperado fuera del test, como en fixtures.
 
-* Test flags
+* 6. Test flags
 
     // In flags_test.go
     // Making use of currently available -test.short flag
@@ -180,11 +178,7 @@ Then running it:
     PASS
     ok  	command-line-arguments	0.008s
 
-* Global state
-
-TODO
-
-* Test helpers
+* 7. Test helpers
 
 TODO
 

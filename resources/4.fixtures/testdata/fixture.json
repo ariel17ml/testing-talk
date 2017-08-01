@@ -1,0 +1,18 @@
+{
+    "objects": [
+        {
+            "id": 5,
+            "name": "The Simpsons",
+            "components": [
+                {"id": 1, "address": "742 Evergreen Terrace"}
+            ]
+        },
+        {
+            "id": 6,
+            "name": "MercadoLibre",
+            "components": [
+                {"id": 2, "address": "Güemes 676"}
+            ]
+        }
+    ]
+}
