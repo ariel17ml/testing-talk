@@ -16,6 +16,7 @@ Metodologías:
 5. Golden files
 6. Test flags
 7. Test helpers
+8. Benchmarks
 
 Recomendaciones:
 a. Limitarse a la API pùblica
@@ -218,6 +219,10 @@ Reducir el ruido en el propósito del test debido a control de erroresy otros ch
 : A tener en cuenta:
 : - Es elegante, pero puede no resultar obvio lo que se está haciendo.
 : - La función de limpieza también debe poder fallar.
+
+8. Benchmarks
+
+TODO
 
 * Recomendaciones
 
