@@ -1,5 +1,4 @@
 Testing en Golang
-Metodologías y recomendaciones
 
 Agosto 2017
 
@@ -7,24 +6,8 @@ Ariel Gerardo Ríos
 
 * Contenido
 
-Metodologías:
-
-1. Tradicional
-2. Subtests
-3. Table driven test
-4. Test fixtures
-5. Golden files
-6. Test flags
-7. Test helpers
-8. Benchmarks
-
-Recomendaciones:
-
-a. Limitarse a la API pùblica
-b. Mocks: ¿son realmente necesarios?
-c. Configurabilidad
-d. Subprocessing
-e. Paralelización
+- Metodologías
+- Recomendaciones
 
 * Metodologías
 
