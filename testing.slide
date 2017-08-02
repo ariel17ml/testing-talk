@@ -19,6 +19,7 @@ Metodologías:
 8. Benchmarks
 
 Recomendaciones:
+
 a. Limitarse a la API pùblica
 b. Mocks: ¿son realmente necesarios?
 c. Configurabilidad
@@ -222,7 +223,70 @@ Reducir el ruido en el propósito del test debido a control de erroresy otros ch
 
 8. Benchmarks
 
-TODO
+8.1. Empezando:
+
+    func BenchmarkSimple(b *testing.B) {
+        for i := 0; i < b.N; i++ {
+            if x := fmt.Sprintf("%d", 42); x != "42" {
+                b.Fatalf("Unexpected string: %s", x)
+            }
+        }
+    }
+
+    func benchmarkFib(i int, b *testing.B) {
+    	for n := 0; n < b.N; n++ {
+    		Fib(i)
+    	}
+    }
+    
+    func BenchmarkFib(b *testing.B) {
+    	b.Run("Fib3", func(b *testing.B) { benchmarkFib(3, b) })
+    	b.Run("Fib10", func(b *testing.B) { benchmarkFib(10, b) })
+    	b.Run("Fib40", func(b *testing.B) { benchmarkFib(40, b) })
+    }
+
+En ejecución:
+
+    $ go test -bench=.
+    BenchmarkSample-4   	10000000	       169 ns/op
+    BenchmarkFib/Fib3-4 	100000000	        14.6 ns/op
+    BenchmarkFib/Fib10-4         	 3000000	       498 ns/op
+    BenchmarkFib/Fib40-4         	       2	 939975954 ns/op
+    PASS
+    ok  	_/Users/arios/code/mercadolibre/testing-talk/resources/8.benchmarks	8.170s    
+
+: La prueba incrementa el valor de b.N hasta que el runner se satisface con la estabilidad del resultado o se cumple el tiempo máximo de ejecución.
+: Se puede indicar que las pruebas incluyan los benchmarks, pero no al revés.
+: Table driven test es una muy buena opción para comparar resultados.
+
+*
+
+8.2. Más opciones
+
+    $ go test -run=XXX -bench=.  # no tests, but an oportunity to use flags!
+    $ go test -bench=. -benchtime=20s
+
+    $ go test -bench=. -benchmem
+    BenchmarkSample-4   	10000000	       173 ns/op	      16 B/op	       2 allocs/op
+    BenchmarkFib/Fib3-4 	100000000	        14.7 ns/op	       0 B/op	       0 allocs/op
+    BenchmarkFib/Fib10-4         	 3000000	       503 ns/op	       0 B/op	       0 allocs/op
+    BenchmarkFib/Fib40-4         	       2	 915035933 ns/op	       0 B/op	       0 allocs/op
+    PASS
+    ok  	_/Users/arios/code/mercadolibre/testing-talk/resources/8.benchmarks	8.203s
+
+8.3. Comparación
+
+Usando la herramienta `golang.org/x/tools/cmd/benchcmp`:
+
+    $ go test -bench=. some-test.go > new.txt
+    $ git co .
+    $ go test -bench=. some-test.go > old.txt
+    $ benchcmp old.txt new.txt
+    benchmark                old ns/op     new ns/op     delta
+    BenchmarkSample-4        170           174           +2.35%
+    BenchmarkFib/Fib3-4      14.7          258           +1655.10%
+    BenchmarkFib/Fib10-4     487           749           +53.80%
+    BenchmarkFib/Fib40-4     947615897     908158099     -4.16%    
 
 * Recomendaciones
 
