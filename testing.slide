@@ -204,7 +204,7 @@ Reducir el ruido en el propósito del test debido a control de erroresy otros ch
 : - Es elegante, pero puede no resultar obvio lo que se está haciendo.
 : - La función de limpieza también debe poder fallar.
 
-8. Benchmarks
+* 8. Benchmarks
 
 8.1. Empezando:
 
