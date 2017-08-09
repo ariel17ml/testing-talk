@@ -148,6 +148,8 @@ Valida la diferencia entre el resultado obtenido y una copia del esperado.
 
 * 6. Test flags
 
+6.1. Built in:
+
     // In flags_test.go
     // Making use of currently available -test.short flag
 
@@ -170,6 +172,31 @@ Ejemplo:
 
 : Beneficios:
 : - Se puede agrupar tests por algún patrón no explícito.
+
+* 
+
+6.2. Customized:
+
+    // In custom_test.go
+    var red
+    func init() {
+    	flag.BoolVar(&red, "red", false, "run red tests")
+        // ... more colors ...
+    	flag.Parse()
+    }
+    
+    func TestSomeColors(t *testing.T) {
+    	t.Run("RedTest1", func(t *testing.T) {
+    		if !red {
+    			t.Skip()
+    		}
+    		t.Log("Ran red test 1")
+    	})
+
+        // ...
+    }
+
+- Recomendado: github.com/jessevdk/go-flags
 
 * 7. Test helpers
 
