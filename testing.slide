@@ -137,7 +137,7 @@ Valida la diferencia entre el resultado obtenido y una copia del esperado.
     	dat, _ := ioutil.ReadFile(path)  // no err for simplicity
     
     	body := w.Body.String()  // a very big body
-    	if !strings.Contains(string(dat), body) {
+    	if !strings.Contains(body, string(dat)) {
     		t.Errorf("Golden file content is not in body! %v", body)
     	}
     }
