@@ -31,3 +31,10 @@ func BenchmarkFib(b *testing.B) {
 	b.Run("Fib10", func(b *testing.B) { benchmarkFib(10, b) })
 	b.Run("Fib40", func(b *testing.B) { benchmarkFib(40, b) })
 }
+
+func TestFailed(t *testing.T) {
+	r := Fib(0)
+	if r == 0 { // indeed
+		t.Errorf("I didn't expect that: %v", r)
+	}
+}

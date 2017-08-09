@@ -173,7 +173,7 @@ Ejemplo:
 
 * 7. Test helpers
 
-Reducir el ruido en el propósito del test debido a control de erroresy otros chequeos.
+Explicitar el propósito del test, reduciendo control de errores y otros chequeos.
 
     func testURL(t *testing.T, url string) {
     	resp, err := http.Get(url)
@@ -245,10 +245,9 @@ En ejecución:
     PASS
     ok  	_/Users/arios/code/mercadolibre/testing-talk/resources/8.benchmarks	6.064s
 
-8.3. Comparación
+8.3. Comparación: benchcmp
 
-Usando la herramienta `golang.org/x/tools/cmd/benchcmp`:
-
+    # ... doing some changes ...
     $ go test -bench=Fib some-test.go > new.txt
     $ git co .
     $ go test -bench=Fib some-test.go > old.txt
@@ -262,19 +261,19 @@ Usando la herramienta `golang.org/x/tools/cmd/benchcmp`:
 
 * a. Limitarse a la API pùblica
 
-- Testar sólo la API pública, a menos que la implementación sea tan compleja que amerite más.
+- Testar sólo la API pública; si la implementación es muy compleja puede necesitar más.
 - Los tests blackbox nos ayudan a no testear lo que no es necesario, pero debemos ser cuidadosos.
 
 * b. Mocks: ¿son realmente necesarios?
 
 - Algunas interfaces no valen la pena ser imitadas, sino implementadas de forma más sencilla.
-- El paquete `net.Conn` es fácil 
+- Ejemplo: servers locales con handlers sencillos para cada caso de uso.
 
 * c. Configurabilidad
 
 - A.k.a. estado global.
-- Aún frente aquellos valores que no cambiarán jamás, es mejor exportarlos como configuraciones con valores default.
-- De no ser posible, administrarlos internamente para que puedan ser sobrescritos por los test (como variables).
+- Incluso valores que no cambian nunca es mejor configurarlos con valores default.
+- De no ser posible, usar variables que puedan ser sobrescritos por los test.
 
 * d. Subprocessing
 
@@ -284,5 +283,14 @@ Usando la herramienta `golang.org/x/tools/cmd/benchcmp`:
 
 * e. Paralelización
 
-- No es recomendado a menos que se esté completamente seguros de que un test no puede interferir en los resultados de otro.
-- Preparar los test para que sean paralelizables es costoso si no se tiene en cuenta desde el principio.
+- No es recomendado; un test puede interferir en los resultados de otro.
+- Tests paralelizables es costoso: debe tenerse en cuenta desde el principio.
+
+* Fuentes y ejemplos
+
+*
+
+- "Advanced Testing in Go" by Mitchell Hasimoto: https://speakerdeck.com/mitchellh/advanced-testing-with-go
+- "Using Sub-tests and Sub-benchmarks" from The Go Blog: https://blog.golang.org/subtests
+- "Go advanced testing tips & tricks" from Reddit: https://www.reddit.com/r/golang/comments/5r9bh8/go_advanced_testing_tips_tricks/
+- Examples on methodologies: https://github.com/ariel17ml/testing-talk/tree/master/examples
