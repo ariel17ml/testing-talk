@@ -286,7 +286,7 @@ En ejecución:
 
 * Recomendaciones
 
-* a. Limitarse a la API pùblica
+* a. Limitarse a la API pública
 
 - Testar sólo la API pública; si la implementación es muy compleja puede necesitar más.
 - Los tests blackbox nos ayudan a no testear lo que no es necesario, pero debemos ser cuidadosos.
@@ -299,8 +299,8 @@ En ejecución:
 * c. Configurabilidad
 
 - A.k.a. estado global.
-- Incluso valores que no cambian nunca es mejor configurarlos con valores default.
-- De no ser posible, usar variables que puedan ser sobrescritos por los test.
+- Incluso valores que no cambian jamás es mejor configurarlos como default.
+- De no ser posible, usar variables que puedan ser sobrescritas por los test.
 
 * d. Subprocessing
 
@@ -315,9 +315,9 @@ En ejecución:
 
 * Fuentes y ejemplos
 
-*
+* 
 
-- "Advanced Testing in Go" by Mitchell Hasimoto: https://speakerdeck.com/mitchellh/advanced-testing-with-go
-- "Using Sub-tests and Sub-benchmarks" from The Go Blog: https://blog.golang.org/subtests
-- "Go advanced testing tips & tricks" from Reddit: https://www.reddit.com/r/golang/comments/5r9bh8/go_advanced_testing_tips_tricks/
-- Examples on methodologies: https://github.com/ariel17ml/testing-talk/tree/master/examples
+- "Advanced Testing in Go", Mitchell Hasimoto: https://speakerdeck.com/mitchellh/advanced-testing-with-go
+- "Using Sub-tests and Sub-benchmarks", The Go Blog: https://blog.golang.org/subtests
+- "Go advanced testing tips & tricks", Reddit: https://www.reddit.com/r/golang/comments/5r9bh8/go_advanced_testing_tips_tricks/
+- Ejemplos de esta presentación: https://github.com/ariel17ml/testing-talk/tree/master/examples
