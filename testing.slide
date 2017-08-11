@@ -317,7 +317,7 @@ En ejecución:
 
 * 
 
-- "Advanced Testing in Go", Mitchell Hasimoto: https://speakerdeck.com/mitchellh/advanced-testing-with-go
+- "Advanced Testing in Go", Mitchell Hashimoto: https://speakerdeck.com/mitchellh/advanced-testing-with-go
 - "Using Sub-tests and Sub-benchmarks", The Go Blog: https://blog.golang.org/subtests
 - "Go advanced testing tips & tricks", Reddit: https://www.reddit.com/r/golang/comments/5r9bh8/go_advanced_testing_tips_tricks/
 - Ejemplos de esta presentación: https://github.com/ariel17ml/testing-talk/tree/master/examples
